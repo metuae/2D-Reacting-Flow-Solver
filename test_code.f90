@@ -16,7 +16,8 @@ module thermo
                                          CPL0, CPL1, CPL2, CPL3, CPL4, CPL5, CPL6,              &
                                          CPH0, CPH1, CPH2, CPH3, CPH4, CPH5, CPH6,              &
                                          CPL0_prim, CPL1_prim, CPL2_prim, CPL3_prim, CPL4_prim, &
-                                         CPH0_prim, CPH1_prim, CPH2_prim, CPH3_prim, CPH4_prim
+                                         CPH0_prim, CPH1_prim, CPH2_prim, CPH3_prim, CPH4_prim, &
+                                         cp_t0
     real(kind=8)                      :: Wo1,CPMA
     character, DIMENSION(nspec_max)   :: spec*4
     real(kind=8), SAVE :: runiv=8314.51D00  ! R in J/(kmol.K)
@@ -75,19 +76,32 @@ implicit none
 integer(kind=4)     :: e
 !
 !'H2:0.029,O2:0.209,N2:0.78'
-X (1)=0.029
-X (2)=0.209
-X (3)=0.78
+x (1)=0.029
+x (2)=0.209
+x (3)=0.78
 call read_data()
 write(6,*) "Enter Reference Temperature"
 read(*,*) t0
-CPMA=0
+cpma=0.d0
 do e = 1, nspec
-HS_T0(e)=runiv*(CPL0(e)+CPL1(e)*t0+CPL2(e)*t0**2+CPL3(e)*t0**3+CPL4(e)*t0**4+CPL5(e)*t0**5+CPL6(e)*t0**6)
-!
-CPMA=CPMA+(HS_T0(e)*X(e))
+   if (t0 .le. 1000.d0) then 
+    cp_t0(e)=cpl5(e)*t0
+    cp_t0(e)=(cpl4(e)+cp_t0(e))*t0
+    cp_t0(e)=(cpl3(e)+cp_t0(e))*t0
+    cp_t0(e)=(cpl2(e)+cp_t0(e))*t0
+    cp_t0(e)=(cpl1(e)+cp_t0(e))*runiv
+   else 
+    cp_t0(e)=cph5(e)*t0
+    cp_t0(e)=(cph4(e)+cp_t0(e))*t0
+    cp_t0(e)=(cph3(e)+cp_t0(e))*t0
+    cp_t0(e)=(cph2(e)+cp_t0(e))*t0
+    cp_t0(e)=(cph1(e)+cp_t0(e))*runiv
+   endif 
+   !
+   cpma=cpma+(cp_t0(e)*x(e))
 enddo
-write(6,*) CPMA
+write(6,*) cpma
 !26.12.2016 METUAE
+!28.12.2016 mk : You were computing enthalp ?
 end program begin_prog
 
