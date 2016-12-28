@@ -17,8 +17,8 @@ module thermo
                                          CPH0, CPH1, CPH2, CPH3, CPH4, CPH5, CPH6,              &
                                          CPL0_prim, CPL1_prim, CPL2_prim, CPL3_prim, CPL4_prim, &
                                          CPH0_prim, CPH1_prim, CPH2_prim, CPH3_prim, CPH4_prim, &
-                                         cp_t0
-    real(kind=8)                      :: Wo1,CPMA
+                                         cp_t0,h_t0
+    real(kind=8)                      :: Wo1,CPMA,h_ma
     character, DIMENSION(nspec_max)   :: spec*4
     real(kind=8), SAVE :: runiv=8314.51D00  ! R in J/(kmol.K)
     real(kind=8)       :: t0                ! reference temperature for the enthalpy computation
