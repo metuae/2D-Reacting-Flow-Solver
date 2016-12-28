@@ -103,5 +103,24 @@ enddo
 write(6,*) cpma
 !26.12.2016 METUAE
 !28.12.2016 mk : You were computing enthalp ?
+!28.12.2016 METUAE	:	Enthalpy Calculation
+h_ma=0.d0
+do e = 1, nspec
+   if (t0 .le. 1000.d0) then 
+    h_t0(e)=(cpl5(e)/5)*t0
+    h_t0(e)=((cpl4(e)/4)+cp_t0(e))*t0
+    h_t0(e)=((cpl3(e)/3)+cp_t0(e))*t0
+    h_t0(e)=((cpl2(e)/2)+cp_t0(e))*t0
+    h_t0(e)=((cpl1(e)+cp_t0(e))*runiv*t0
+   else 
+    h_t0(e)=(cph5(e)/5)*t0
+    h_t0(e)=((cph4(e)/4)+cp_t0(e))*t0
+    h_t0(e)=((cph3(e)/3)+cp_t0(e))*t0
+    h_t0(e)=((cph2(e)/2)+cp_t0(e))*t0
+    h_t0(e)=(cph1(e)+cp_t0(e))*runiv*t0
+   endif 
+   !
+   h_ma=h_ma+(h_t0(e)*x(e))
+enddo
 end program begin_prog
 
